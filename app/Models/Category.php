@@ -15,6 +15,7 @@ class Category extends AbstractModel
     ];
     protected array $required = [
         "name" => "Este campo é obrigatorio",
+
     ];
 
     protected bool $timestamps = true;

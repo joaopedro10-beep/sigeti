@@ -119,7 +119,7 @@ class RolePermission extends AbstractModel
         $statement->execute();
 
         return array_column($statement->fetchAll(\PDO::FETCH_ASSOC), "permission_id");
-    }gi
+    }
 
 
 }

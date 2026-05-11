@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= $title ?? "Dashboard | Professor - " . APP_NAME ?></title>
+    <title><?= $title ?? "Dashboard | Técnico - " . APP_NAME ?></title>
 
 
     <link rel="shortcut icon" href="<?= assets_mazer('/assets/compiled/svg/favicon.svg') ?>" type="image/x-icon">
@@ -69,7 +69,7 @@
                         </svg>
                     </div>
                     <div class="sidebar-toggler  x">
-                        <a href="" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
+                        <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
                     </div>
                 </div>
             </div>
@@ -78,7 +78,7 @@
                     <li class="sidebar-title">Menu</li>
 
                     <li class="sidebar-item <?= ($menuActive ?? '') === 'dashboard' ? 'active' : '' ?>">
-                        <a href="<?= url('/professor/dashboard') ?>" class="sidebar-link">
+                        <a href="<?= url('/tecnico/dashboard') ?>" class="sidebar-link">
                             <i class="bi bi-speedometer2"></i>
                             <span>Dashboard</span>
                         </a>
@@ -87,16 +87,40 @@
                     <li class="sidebar-item  has-sub <?= ($menuActive ?? '') === 'chamados' ? 'active' : '' ?>">
                         <a href="" class='sidebar-link'>
                             <i class="bi bi-ticket-detailed-fill"></i>
-                            <span>Meus Chamados</span>
+                            <span>Chamados</span>
                         </a>
 
                         <ul class="submenu ">
                             <li class="submenu-item <?= ($menuActive ?? '') === 'chamados' && ($submenuActive ?? '') === 'novo' ? 'active' : '' ?>">
-                                <a href="<?= url('/professor/chamados/cadastrar') ?>" class="submenu-link">Abrir</a>
+                                <a href="<?= url('/tecnico/chamados/cadastrar') ?>" class="submenu-link">Novo</a>
                             </li>
 
                             <li class="submenu-item <?= ($menuActive ?? '') === 'chamados' && ($submenuActive ?? '') === 'todos' ? 'active' : '' ?>">
-                                <a href="<?= url('/professor/chamados') ?>" class="submenu-link">Todos</a>
+                                <a href="<?= url('/tecnico/chamados') ?>" class="submenu-link">Todos</a>
+                            </li>
+
+                            <li class="submenu-item <?= ($menuActive ?? '') === 'chamados' && ($submenuActive ?? '') === 'abertos' ? 'active' : '' ?>">
+                                <a href="<?= url('/tecnico/chamados/abertos') ?>" class="submenu-link">Abertos</a>
+                            </li>
+
+                            <li class="submenu-item <?= ($menuActive ?? '') === 'chamados' && ($submenuActive ?? '') === 'em_andamento' ? 'active' : '' ?>">
+                                <a href="<?= url('/tecnico/chamados/em-andamento') ?>" class="submenu-link">Em Andamento</a>
+                            </li>
+
+                            <li class="submenu-item <?= ($menuActive ?? '') === 'chamados' && ($submenuActive ?? '') === 'aguardando' ? 'active' : '' ?>">
+                                <a href="<?= url('/tecnico/chamados/aguardando') ?>" class="submenu-link">Aguardando</a>
+                            </li>
+
+                            <li class="submenu-item <?= ($menuActive ?? '') === 'chamados' && ($submenuActive ?? '') === 'resolvidos' ? 'active' : '' ?>">
+                                <a href="<?= url('/tecnico/chamados/resolvidos') ?>" class="submenu-link">Resolvidos</a>
+                            </li>
+
+                            <li class="submenu-item <?= ($menuActive ?? '') === 'chamados' && ($submenuActive ?? '') === 'finalizados' ? 'active' : '' ?>">
+                                <a href="<?= url('/tecnico/chamados/finalizados') ?>" class="submenu-link">Finalizados</a>
+                            </li>
+
+                            <li class="submenu-item <?= ($menuActive ?? '') === 'chamados' && ($submenuActive ?? '') === 'arquivados' ? 'active' : '' ?>">
+                                <a href="<?= url('/tecnico/chamados/arquivados') ?>" class="submenu-link">Arquivados</a>
                             </li>
                         </ul>
                     </li>
@@ -109,11 +133,11 @@
 
                         <ul class="submenu ">
                             <li class="submenu-item <?= ($menuActive ?? '') === 'conta' && ($submenuActive ?? '') === 'perfil' ? 'active' : '' ?>">
-                                <a href="<?= url('/professor/perfil') ?>" class="submenu-link">Perfil</a>
+                                <a href="<?= url('/tecnico/perfil') ?>" class="submenu-link">Perfil</a>
                             </li>
 
                             <li class="submenu-item <?= ($menuActive ?? '') === 'conta' && ($submenuActive ?? '') === 'seguranca' ? 'active' : '' ?>">
-                                <a href="<?= url('/professor/seguranca') ?>" class="submenu-link">Segurança</a>
+                                <a href="<?= url('/tecnico/seguranca') ?>" class="submenu-link">Segurança</a>
                             </li>
                         </ul>
                     </li>
@@ -130,15 +154,13 @@
         </div>
     </div>
 
-    <?= $this->section('content') ?>
-
     <!-- Modal Para Sair -->
     <div class="modal fade text-left" id="default" tabindex="-1" role="dialog"
          aria-labelledby="myModalLabel1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="myModalLabel1">Pronto para sair?</h5>
+                    <h5 class="modal-title text-white" id="myModalLabel1">Pronto para sair?</h5>
                     <button type="button" class="close rounded-pill" data-bs-dismiss="modal"
                             aria-label="Close">
                         <i data-feather="x"></i>
@@ -168,6 +190,10 @@
             </div>
         </div>
     </div>
+
+    <?= $this->section('modals') ?>
+
+    <?= $this->section('content') ?>
 </div>
 <script src="<?= assets_mazer('/assets/static/js/components/dark.js') ?>"></script>
 <script src="<?= assets_mazer('/assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js') ?>"></script>
@@ -184,6 +210,8 @@
 <!--//Novo-->
 <script src="<?= assets('/js/charts/chart-tickets-month.js') ?>"></script>
 <script src="<?= assets('/js/charts/chart-tickets-category.js') ?>"></script>
+<script src="<?= assets('/js/charts/chart-avg-resolution.js') ?>"></script>
+<script src="<?= assets('/js/charts/chart-tickets-priority.js') ?>"></script>
 
 <script src="<?= assets_mazer('/assets/extensions/jquery/jquery.min.js') ?>"></script>
 <script src="<?= assets_mazer('/assets/extensions/datatables.net/js/jquery.dataTables.min.js') ?>"></script>

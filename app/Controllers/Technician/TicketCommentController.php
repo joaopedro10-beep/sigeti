@@ -5,6 +5,7 @@ namespace App\Controllers\Technician;
 use App\Core\Auth;
 use App\Core\Controller;
 use App\Core\Message;
+use App\Core\Permission;
 use App\Models\Ticket\Ticket;
 use App\Models\Ticket\TicketComment;
 use App\Models\User;
@@ -14,7 +15,7 @@ class TicketCommentController extends Controller
  public function __construct()
  {
      parent::__construct("App");
-     Auth::requireRole(User::TECHNICIAN);
+     Auth::requirePermission(Permission::COMMENT_TICKET);
  }
     public function index(?array $data):void
     {

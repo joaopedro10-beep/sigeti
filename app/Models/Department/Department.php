@@ -3,7 +3,7 @@
 namespace App\Models\Department;
 
 use App\Core\AbstractModel;
-use App\Models\Ticket;
+use App\Models\Ticket\Ticket;
 use MongoDB\Driver\Exception\InvalidArgumentException;
 
 class Department extends AbstractModel

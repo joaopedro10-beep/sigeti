@@ -1,8 +1,11 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Ticket;
 
 use App\Core\AbstractModel;
+use App\Models\Category;
+use App\Models\School;
+use App\Models\User;
 
 class Ticket extends AbstractModel
 {

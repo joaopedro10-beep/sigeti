@@ -33,7 +33,7 @@
                                     </div>
                                     <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
                                         <h6 class="text-muted font-semibold">Abertos</h6>
-                                        <h6 class="font-extrabold mb-0"><?=$quantityTicketsByStatus[\App\Models\Ticket::OPEN] ?? 0?></h6>
+                                        <h6 class="font-extrabold mb-0"><?=$quantityTicketsByStatus[\App\Models\Ticket\Ticket::OPEN] ?? 0?></h6>
                                     </div>
                                 </div>
                             </div>
@@ -50,7 +50,7 @@
                                     </div>
                                     <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
                                         <h6 class="text-muted font-semibold">Andamento</h6>
-                                        <h6 class="font-extrabold mb-0"><?=$quantityTicketsByStatus[\App\Models\Ticket::IN_PROGRESS] ?? 0?></h6>
+                                        <h6 class="font-extrabold mb-0"><?=$quantityTicketsByStatus[\App\Models\Ticket\Ticket::IN_PROGRESS] ?? 0?></h6>
                                     </div>
                                 </div>
                             </div>
@@ -67,7 +67,7 @@
                                     </div>
                                     <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
                                         <h6 class="text-muted font-semibold">Aguardando</h6>
-                                        <h6 class="font-extrabold mb-0"><?=$quantityTicketsByStatus[\App\Models\Ticket::WAITING] ?? 0?></h6>
+                                        <h6 class="font-extrabold mb-0"><?=$quantityTicketsByStatus[\App\Models\Ticket\Ticket::WAITING] ?? 0?></h6>
                                     </div>
                                 </div>
                             </div>
@@ -84,7 +84,7 @@
                                     </div>
                                     <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
                                         <h6 class="text-muted font-semibold">Resolvidos</h6>
-                                        <h6 class="font-extrabold mb-0"><?=$quantityTicketsByStatus[\App\Models\Ticket::RESOLVED] ?? 0?></h6>
+                                        <h6 class="font-extrabold mb-0"><?=$quantityTicketsByStatus[\App\Models\Ticket\Ticket::RESOLVED] ?? 0?></h6>
                                     </div>
                                 </div>
                             </div>
@@ -101,7 +101,7 @@
                                     </div>
                                     <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
                                         <h6 class="text-muted font-semibold">Finalizados</h6>
-                                        <h6 class="font-extrabold mb-0"><?=$quantityTicketsByStatus[\App\Models\Ticket::FINISHED] ?? 0?></h6>
+                                        <h6 class="font-extrabold mb-0"><?=$quantityTicketsByStatus[\App\Models\Ticket\Ticket::FINISHED] ?? 0?></h6>
                                     </div>
                                 </div>
                             </div>
@@ -118,7 +118,7 @@
                                     </div>
                                     <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
                                         <h6 class="text-muted font-semibold">Arquivados</h6>
-                                        <h6 class="font-extrabold mb-0"><?=$quantityTicketsByStatus[\App\Models\Ticket::ARCHIVED] ?? 0?></h6>
+                                        <h6 class="font-extrabold mb-0"><?=$quantityTicketsByStatus[\App\Models\Ticket\Ticket::ARCHIVED] ?? 0?></h6>
                                     </div>
                                 </div>
                             </div>

@@ -5,15 +5,16 @@ namespace App\Controllers\Technician;
 use App\Core\Auth;
 use App\Core\Controller;
 use App\Core\Message;
+use App\Core\Permission;
 use App\Models\Category;
-use App\Models\User;
+
 
 class CategoryController extends Controller
 {
     public function __construct()
     {
         parent::__construct("App");
-        Auth::requireRole(User::TECHNICIAN);
+        Auth::requirePermission(Permission::VIEW_CATEGORIES);
     }
 
     public function index(): void
@@ -25,12 +26,12 @@ class CategoryController extends Controller
     }
 
     public function create(): void
-    {
+    {   Auth::requirePermission(Permission::CREATE_CATEGORY);
         echo $this->view->render("technician/category/create");
     }
 
     public function store(?array $data): void
-    {
+    {   Auth::requirePermission(Permission::CREATE_CATEGORY);
         $this->validateCsrfToken($data, "tecnico/categorias/cadastrar");
         $newCategory = new Category();
         $errors = $newCategory->validate($data);
@@ -65,6 +66,7 @@ class CategoryController extends Controller
 
     public function edit(?array $data): void
     {
+        Auth::requirePermission(Permission::EDIT_CATEGORY);
         $category = Category::find($data["id"]);
         if (!$category) {
             Message::error("Essa categoria não existe!");
@@ -78,7 +80,7 @@ class CategoryController extends Controller
 
     public function update(?array $data): void
     {
-
+        Auth::requirePermission(Permission::EDIT_CATEGORY);
         $this->validateCsrfToken($data, "tecnico/categorias/editar/" . $data['id']);
         $category = Category::find($data["id"]);
         if (!$category) {

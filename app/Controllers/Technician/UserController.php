@@ -5,6 +5,7 @@ namespace App\Controllers\Technician;
 use App\Core\Auth;
 use App\Core\Controller;
 use App\Core\Message;
+use App\Core\Permission;
 use App\Models\School;
 use App\Models\SchoolUser;
 use App\Models\User;
@@ -16,7 +17,7 @@ class UserController extends Controller
     {
         parent::__construct("App");
 
-        Auth::requireRole(User::TECHNICIAN);
+        Auth::requirePermission(Permission::VIEW_USERS);
     }
 
     public function index(): void
@@ -35,6 +36,7 @@ class UserController extends Controller
 
     public function create(): void
     {
+        Auth::requirePermission(Permission::CREATE_USER);
         $schools = School::all();
 
         echo $this->view->render("technician/user/create", [
@@ -46,6 +48,7 @@ class UserController extends Controller
 
     public function store(?array $data): void
     {
+        Auth::requirePermission(Permission::CREATE_USER);
         $this->validateCsrfToken($data, "/tecnico/usuarios/cadastrar");
 
         $newUser = new User();
@@ -103,6 +106,7 @@ class UserController extends Controller
 
     public function edit(?array $data): void
     {
+        Auth::requirePermission(Permission::EDIT_USER);
         $userId = $data['id'];
 
         $user = User::find($userId);
@@ -127,6 +131,7 @@ class UserController extends Controller
 
     public function update(?array $data): void
     {
+        Auth::requirePermission(Permission::EDIT_USER);
         $userId = $data['id'];
         $this->validateCsrfToken($data, "/tecnico/usuarios/editar/" . $userId);
 

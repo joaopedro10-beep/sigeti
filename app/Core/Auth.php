@@ -54,7 +54,6 @@ class Auth
             return;
         }
 
-        SessionTimeoutMiddleware::handle();
     }
 
     public static function requireRole(string $role): void

@@ -3,6 +3,10 @@
 namespace App\Models;
 
 use App\Core\AbstractModel;
+use App\Models\Department\UserDepartment;
+use App\Models\Role\Role;
+use App\Models\Role\RolePermission;
+use App\Models\Ticket\Ticket;
 
 class User extends AbstractModel
 {
@@ -15,6 +19,7 @@ class User extends AbstractModel
         "email",
         "password",
         "document",
+        "role_id",
         "role",
         "last_login_at",
         "status",
@@ -25,10 +30,13 @@ class User extends AbstractModel
     protected array $required = [
         "name" => "O campo NOME é obrigatório.",
         "email" => "O campo EMAIL é obrigatório.",
-        "password" => "O campo SENHA é obrigatório."
+        "password" => "O campo SENHA é obrigatório.",
+        "role_id" => "o campo PERFIL é obrigatório."
     ];
 
     protected bool $timestamps = true;
+
+    protected bool $softDelete = true;
 
     public const TEACHER = "professor";
     public const TECHNICIAN = "tecnico";
@@ -124,6 +132,73 @@ class User extends AbstractModel
     public function getDocument(): ?string
     {
         return $this->attributes["document"] ?? null;
+    }
+
+    public function setRoleId(int $roleId): void
+    {
+        if ($roleId < 1) {
+            throw new \InvalidArgumentException("O ID DO PERFIL do usuário é inválido.");
+        }
+
+        $this->attributes["role_id"] = $roleId;
+    }
+
+    public function getRoleId(): int
+    {
+        return $this->attributes["role_id"];
+    }
+
+    public function role(): ?Role
+    {
+        return $this->getRoleId() ? Role::find($this->getRoleId()) : null;
+    }
+
+    public function hasPermission(string $permission): bool
+    {
+        if (!$this->getRoleId()) {
+            return false;
+        }
+
+        return RolePermission::userHasPermission($this->getRoleId(), $permission);
+    }
+
+    public static function usersByPermission(string $permission): array
+    {
+        $instance = new static();
+
+        $sql = "SELECT DISTINCT users.*
+            FROM users
+            INNER JOIN roles ON roles.id = users.role_id
+            INNER JOIN role_permissions ON role_permissions.role_id = roles.id
+            INNER JOIN permissions ON permissions.id = role_permissions.permission_id
+            WHERE permissions.name = :permission
+              AND users.status = 'ativo'
+              AND users.deleted_at IS NULL";
+
+        $statement = $instance->connection->prepare($sql);
+        $statement->bindValue(":permission", $permission, \PDO::PARAM_STR);
+        $statement->execute();
+
+        $rows = $statement->fetchAll(\PDO::FETCH_ASSOC);
+
+        $users = [];
+        foreach ($rows as $row) {
+            $users[] = static::hydrate($row);
+        }
+
+        return $users;
+    }
+
+    public function departments(): array
+    {
+        return UserDepartment::linksByUser($this->getId());
+    }
+
+    public function existsDepartmentLinks(): bool
+    {
+        return (new UserDepartment())
+                ->where("user_id", "=", $this->getId())
+                ->count() > 0;
     }
 
     public function setRole(?string $role): void
@@ -231,7 +306,6 @@ class User extends AbstractModel
         return (new static())->where("role", "=", $role)->get();
     }
 
-
     public function existsUserByEmail(string $email, ?int $ignoreId = null): bool
     {
         $sql = "SELECT COUNT(*) FROM {$this->table} WHERE email = :email";
@@ -280,5 +354,85 @@ class User extends AbstractModel
         return $errors;
     }
 
+    public function existsTickets(): bool
+    {
+        return (new Ticket())
+                ->where("opened_by", "=", $this->getId())
+                ->count() > 0;
+    }
 
+    public function existsSchoolLinks(): bool
+    {
+        return (new SchoolUser())
+                ->where("user_id", "=", $this->getId())
+                ->count() > 0;
+    }
+
+    public function totalNumberOfActiveAndRegisteredUsersNotDeleted(): ?int
+    {
+        return (new static())
+            ->where("status", "!=", 'inativo')
+            ->orderBy("created_at", "DESC")
+            ->count();
+    }
+
+    public function recentlyCreatedActiveRegisteredAndNonDeletedUsers(): ?array
+    {
+        return (new static())
+            ->where("status", "!=", 'inativo')
+            ->orderBy("created_at", "DESC")
+            ->limit(5)
+            ->get();
+    }
+
+    public static function totalUsers():?int
+    {
+        $instance = new static();
+        $sql = "select count(*) from users where deleted_at IS NULL and status = 'ativo'";
+
+        $statement = $instance->connection->prepare($sql);
+        $statement->execute();
+
+        $totalUsers = $statement->fetchColumn();
+
+        return $totalUsers;
+    }
+
+    public static function recentUsers():?array
+    {
+        $instance = new static();
+        $sql = "select * from users where deleted_at IS NULL and status != 'inativo' order by created_at desc limit 7";
+
+        $statement = $instance->connection->prepare($sql);
+        $statement->execute();
+
+        $rows = $statement->fetchAll(\PDO::FETCH_ASSOC);
+
+        $recentUsers = $statement->fetchAll(\PDO::FETCH_ASSOC);
+
+        foreach ($rows as $row) {
+            $recentUsers[] = static::hydrate($row);
+        }
+
+        return $recentUsers;
+    }
+
+    public static function recentRegisteredUsers():?array
+    {
+        $instance = new static();
+        $sql = "select * from users where deleted_at IS NULL and status = 'registrado'";
+
+        $statement = $instance->connection->prepare($sql);
+        $statement->execute();
+
+        $rows = $statement->fetchAll(\PDO::FETCH_ASSOC);
+
+        $recentRegisteredUsers = $statement->fetchAll(\PDO::FETCH_ASSOC);
+
+        foreach ($rows as $row) {
+            $recentRegisteredUsers[] = static::hydrate($row);
+        }
+
+        return $recentRegisteredUsers;
+    }
 }

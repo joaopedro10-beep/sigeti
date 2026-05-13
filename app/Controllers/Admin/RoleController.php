@@ -2,9 +2,29 @@
 
 namespace App\Controllers\Admin;
 
+use App\Core\Auth;
 use App\Core\Controller;
+use App\Core\Permission;
+use App\Models\Role\Role;
 
 class RoleController extends Controller
 {
+    public function __construct()
+    {
+        parent::__construct("App");
+        Auth::requirePermission(Permission::VIEW_ROLES);
+    }
 
+    public function index():void
+    {
+        Auth::requirePermission(Permission::VIEW_ROLES);
+
+        $roles = (new Role())->orderBy("name", "ASC")->get();
+
+        echo $this->view->render("admin/role/index", [
+            "roles" => $roles
+        ]);
+
+      clear_old();
+    }
 }
